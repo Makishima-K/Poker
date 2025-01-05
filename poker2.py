@@ -6,13 +6,9 @@ pygame.init()
 
 # Константы
 WIDTH, HEIGHT = 1250, 900  # Размер экрана
-#GRID_COLS, GRID_ROWS = 10, 5  # Количество колонок и строк в сетке
-#WIDTHPLAYER, HEIGHTPLAYER = 1000,500
-#CELL_WIDTH = WIDTH // GRID_COLS  # Ширина ячейки
-#CELL_HEIGHT = HEIGHT // GRID_ROWS  # Высота ячейки
-#IMAGE_SIZE = 50  #
-cursor = pygame.image.load('Playing Cards/2_of_clubs.png')
-cursor = pygame.transform.scale(cursor, (250,360))
+
+#cursor = pygame.image.load('Playing Cards/2_of_clubs.png')
+#cursor = pygame.transform.scale(cursor, (250,360))
 
 suit = ['clubs','hearts','spades','diamonds']
 numbers = ['ace','2','3','4','5','6','7','8','9','10','jack','queen','king']
@@ -48,27 +44,27 @@ for i in suit:
         n+=1
 
 
-print(cards)
-print(deck)
-print(len(cards))
-print(n)
+#print(cards)
+#print(deck)
+#print(len(deck))
+#print(n)
 clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-r1 = 0#random.randint(0,len(cards)-1)
+r1 = random.randint(0,len(cards)-1)#0
 d1 = cards[r1][2]
 cards.pop(r1)
-r2 = 8#random.randint(0,len(cards)-1)
+r2 = random.randint(0,len(cards)-1)#8
 d2 = cards[r2][2]
 cards.pop(r2)
-r3 = 8#random.randint(0,len(cards)-1)
+r3 = random.randint(0,len(cards)-1)#8
 d3 = cards[r3][2]
 cards.pop(r3)
-r4 = 8#random.randint(0,len(cards)-1)
+r4 = random.randint(0,len(cards)-1)#8
 d4 = cards[r4][2]
 cards.pop(r4)
-r5 = 8#random.randint(0,len(cards)-1)
+r5 = random.randint(0,len(cards)-1)#8
 d5 = cards[r5][2]
 cards.pop(r5)
 
@@ -99,6 +95,28 @@ pokerCombo = {'Straight Flush':9,
               'Two Pair':3,
               'Pair':2,
               'High Card':1}
+
+
+
+def full_house(cards1, cards2, cards3, cards4, cards5):
+    # Получаем все значения карт
+    values = [cards1[0], cards2[0], cards3[0], cards4[0], cards5[0]]
+    
+    # Считаем количество каждой карты
+    value_count = {value: values.count(value) for value in values}
+    
+    # Сортируем ранги по количеству в убывающем порядке
+    sorted_values = sorted(value_count.items(), key=lambda x: x[1], reverse=True)
+    
+    # Проверяем на Full House (тройка + пара)
+    if sorted_values[0][1] == 3 and sorted_values[1][1] == 2:
+        # Возвращаем Full House, старшую тройку и пару
+        three_of_a_kind = sorted_values[0][0]
+        pair = sorted_values[1][0]
+        return pokerCombo['Full House'], True, three_of_a_kind
+    
+    # Если комбинации Full House нет
+    return 0, False, None
 
 
 
@@ -256,7 +274,7 @@ textScore_surface = font.render(textScore, True, GREEN)
 textScore_rect = textScore_surface.get_rect(center=(WIDTH // 2, HEIGHT - 550))
 
 
-print(deck[r1][2])
+#print(deck[r1][2])
 pygame.display.set_caption("Poker2")
 while True:
     # События
@@ -319,7 +337,7 @@ while True:
                                 d5 = cards[r5][2]
                                 cards.pop(r5)
 #                                print(r5)
-                                print((deck[d1],deck[d2],deck[d3],deck[d4],deck[d5]))
+#                                print((deck[d1],deck[d2],deck[d3],deck[d4],deck[d5]))
                             else:
                                 print('empty')
             if event.key == pygame.K_6:
@@ -359,6 +377,11 @@ while True:
         combo,g,score1 = flush(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5])
 
     if g == False:
+       combo,g,score1 = full_house(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5])
+
+
+
+    if g == False:
         combo,g,score1 = straight(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5])
 
     if g == False:
@@ -382,6 +405,10 @@ while True:
 
         if combo == 8:
             text = 'Four of a Kind'
+            HighCardST = False
+        
+        if combo == 7:
+            text = 'Full House'
             HighCardST = False
 
         if combo == 6:
