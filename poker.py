@@ -158,7 +158,7 @@ def two_pair(cards1, cards2, cards3, cards4, cards5):
 
 def HighCards(cards1,cards2,cards3,cards4,cards5):
       k = max(score[cards1[0]],score[cards2[0]],score[cards3[0]],score[cards4[0]],score[cards5[0]])
-      k = k/100
+      k = k
       return k
 
 def Pair(card1, card2, card3, card4, card5):
@@ -392,7 +392,7 @@ while True:
     if g == False:
         combo,g,score1 = Pair(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5])
 
-    HighCard = float(HighCards(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5]))
+    HighCard = HighCards(deck[d1],deck[d2],deck[d3],deck[d4],deck[d5])
 
     HighCardST = True
     if combo != None:
